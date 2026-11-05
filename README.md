@@ -1,6 +1,6 @@
 # TABLE - Restaurant Ordering System
 
-A small Java Swing desktop project demonstrating six coordinated design patterns.
+A small Java Swing desktop project demonstrating six course patterns plus State as an additional pattern.
 No website, database, network connection, accounts, or payment integration is required.
 Orders exist only during the current application session. All prices are in KZT.
 
@@ -45,14 +45,16 @@ Percentage discounts round down to whole tenge; the total equals subtotal minus 
 | Factory Method | `MealCreator` and three creator subclasses | Shared `prepare()` invokes an overridden product creation method |
 | Decorator | `Extra`, `Cheese`, `Sauce` | Wraps `Meal`, extending description and price |
 | Strategy | `DiscountStrategy` and three policies | Interchangeable pricing behavior |
-| State | `OrderState` and four states | Each state defines the next legal state |
+| Builder | `OrderBuilder` | Assembles item snapshots and a discount policy before building an order |
 | Observer | `OrderObserver`, `OrderService`, two UI subscribers | Publishes submissions and status updates to both views |
 | Facade | `OrderFacade` | Coordinates validation, immutable item snapshots, pricing, and submission |
+| State (additional; not counted) | `OrderState` and four states | Each state defines the next legal state |
 
-Application flow: creator -> decorated meal -> facade -> discount strategy ->
+Application flow: creator -> decorated meal -> facade -> builder + discount strategy ->
 order service -> observer views. Kitchen action -> order -> current state -> observer views.
 The UI and service operate on Swing's event dispatch thread. This is a single-user demo,
 not a thread-safe backend. See `docs/architecture.md` and the PlantUML sources in `docs/uml/`.
+See `docs/solid-and-clean-code.md` for concrete SOLID and clean-code examples and limitations.
 
 ## Verification
 
@@ -75,5 +77,7 @@ are recorded in `docs/verification.md` and `docs/defense.md`.
 - `dist/restaurant-ordering.jar`: executable application.
 
 The report includes a **proposed** three-person responsibility split. Add real team names
-and record actual contributions before submission. Confirm the selected patterns were
-covered in your course. No individual authorship claims are made by this repository.
+and record actual contributions before submission. The six counted patterns are covered in
+the supplied syllabus; State is additional. The syllabus permits AI only for reference and
+clarification, so this generated implementation must not replace independent student work.
+No individual authorship claims are made by this repository.

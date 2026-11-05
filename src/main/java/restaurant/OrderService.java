@@ -13,8 +13,9 @@ public final class OrderService {
     public void subscribe(OrderObserver observer) { observers.add(Objects.requireNonNull(observer)); }
     public void unsubscribe(OrderObserver observer) { observers.remove(observer); }
     public List<Order> orders() { return List.copyOf(orders); }
-    Order submit(List<Order.Item> items, String policy, int subtotal, int discount) {
-        Order order = new Order(nextId++, items, policy, subtotal, discount);
+    Order submit(OrderBuilder builder) {
+        Order order = builder.build(nextId);
+        nextId++;
         orders.add(order);
         publish(order);
         return order;

@@ -27,6 +27,15 @@ public final class SystemTest {
         check(pizza.price() == 2500 && burger.price() == 1800 && drink.price() == 600, "Menu products");
         Meal extra = new Extra.Sauce(new Extra.Cheese(pizza));
         check(extra.price() == 2950 && extra.description().contains("cheese + sauce"), "Stacked decorators");
+        OrderBuilder builder = new OrderBuilder().addMeal(extra);
+        Order built = builder.build(50);
+        check(built.total() == 2950 && built.items().size() == 1, "Builder default policy");
+        builder.addMeal(drink).withDiscount(new DiscountStrategy.Student());
+        Order expanded = builder.build(51);
+        check(expanded.total() == 3195 && expanded.items().size() == 2, "Builder staged assembly");
+        check(built.total() == 2950 && built.items().size() == 1, "Builder reuse preserves built orders");
+        rejects(() -> new OrderBuilder().build(52), IllegalArgumentException.class);
+        rejects(() -> builder.build(0), IllegalArgumentException.class);
         OrderService service = new OrderService();
         OrderFacade facade = new OrderFacade(service);
         check(facade.quote(List.of(extra, drink), new DiscountStrategy.None()).total() == 3550, "No discount");
