@@ -1,9 +1,0 @@
-@startuml
-title Order lifecycle
-[*] --> Pending : submit valid order
-Pending --> Preparing : advance
-Preparing --> Ready : advance
-Ready --> Completed : advance
-Completed --> [*]
-note right of Completed : Further advancement is rejected.\nNo backward or skip operation is exposed.
-@enduml
