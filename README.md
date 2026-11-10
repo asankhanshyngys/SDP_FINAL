@@ -1,4 +1,4 @@
-# TABLE - Restaurant Ordering System
+# Ticket to taste - Restaurant Ordering System
 
 A small Java Swing desktop project demonstrating six course patterns plus State as an additional pattern.
 No website, database, network connection, accounts, or payment integration is required.
