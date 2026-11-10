@@ -1,0 +1,96 @@
+@startuml
+title Restaurant ordering - six course patterns plus State
+skinparam classAttributeIconSize 0
+interface Meal {
+  +description(): String
+  +price(): int
+}
+abstract class MealCreator {
+  +prepare(): Meal
+  #createMeal(): Meal
+}
+class PizzaCreator
+class BurgerCreator
+class DrinkCreator
+MealCreator <|-- PizzaCreator
+MealCreator <|-- BurgerCreator
+MealCreator <|-- DrinkCreator
+MealCreator ..> Meal : creates
+class Pizza
+class Burger
+class Drink
+Meal <|.. Pizza
+Meal <|.. Burger
+Meal <|.. Drink
+abstract class Extra
+class Cheese
+class Sauce
+Meal <|.. Extra
+Extra o-- Meal : wrapped
+Extra <|-- Cheese
+Extra <|-- Sauce
+interface DiscountStrategy {
+  +discount(subtotal): int
+}
+class None
+class Student
+class Promotion
+DiscountStrategy <|.. None
+DiscountStrategy <|.. Student
+DiscountStrategy <|.. Promotion
+class OrderFacade {
+  +quote(meals, strategy): Quote
+  +placeOrder(meals, strategy): Order
+}
+OrderFacade ..> DiscountStrategy
+class OrderBuilder {
+  +addMeal(meal): OrderBuilder
+  +withDiscount(strategy): OrderBuilder
+  +quote(): Totals
+  +build(id): Order
+}
+OrderFacade ..> OrderBuilder : assembles
+OrderBuilder ..> Meal : snapshots
+OrderBuilder --> DiscountStrategy : policy
+OrderBuilder ..> Order : builds
+OrderService ..> OrderBuilder : assigns id and builds
+OrderFacade --> OrderService
+OrderFacade ..> Meal
+class OrderService {
+  +subscribe(observer)
+  +advance(id)
+  +orders(): List
+}
+interface OrderObserver {
+  +orderChanged(order)
+}
+OrderService o-- OrderObserver : subscribers
+OrderService *-- Order : stores
+class Order {
+  +status(): String
+  ~advance()
+}
+interface OrderState {
+  +next(): OrderState
+}
+Order *-- OrderState : current
+class Pending
+class Preparing
+class Ready
+class Completed
+OrderState <|.. Pending
+OrderState <|.. Preparing
+OrderState <|.. Ready
+OrderState <|.. Completed
+class RestaurantPanel
+RestaurantPanel --> OrderFacade
+RestaurantPanel --> OrderService
+RestaurantPanel ..> OrderObserver : two method-reference subscribers
+note bottom of MealCreator : Factory Method
+note bottom of Extra : Decorator
+note bottom of DiscountStrategy : Strategy
+note bottom of OrderState : State (additional; not counted)
+note bottom of OrderBuilder : Builder (counted course pattern)
+note bottom of OrderObserver : Observer
+note bottom of OrderFacade : Facade
+@enduml
